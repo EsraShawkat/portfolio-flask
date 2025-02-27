@@ -19,7 +19,7 @@ az group create \
     --location $LOCATION \
     --name $RESOURCE_GROUP_NAME
 
-APP_SERVICE_PLAN_NAME='asp_FlaskPortfoliows2'    
+APP_SERVICE_PLAN_NAME='esra.shawkat_asp_4613'    
 
 az appservice plan create \
     --name $APP_SERVICE_PLAN_NAME \
@@ -27,7 +27,7 @@ az appservice plan create \
     --is-linux
 
 # Change 123 to any three characters to form a unique name across Azure
-APP_SERVICE_NAME='portfolio-flask-esra-001'  # Could change
+APP_SERVICE_NAME='salmon-sky-611700db7dd4475aac2c11cd4d30fedd'  # Could change
 
 az webapp create\
     --name $APP_SERVICE_NAME \
