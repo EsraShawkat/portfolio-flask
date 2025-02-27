@@ -1,7 +1,7 @@
 az login
 az account list
 az account show --query id --output tsv
-az account set --subscription "Self-HBO_ICT"   # Change this one
+az account set --subscription "Azure for Students"   # Change this one
 
 az group list
 
@@ -12,7 +12,7 @@ az group list --query [].name --output table
 
 # Long way home
 LOCATION='westeurope'
-RESOURCE_GROUP_NAME='AzureFlaskPortFoliows2'  # Could change
+RESOURCE_GROUP_NAME='esra.shawkat_rg_7810'  # Could change
 
 # Create a resource group
 az group create \
@@ -27,7 +27,7 @@ az appservice plan create \
     --is-linux
 
 # Change 123 to any three characters to form a unique name across Azure
-APP_SERVICE_NAME='FlaskPortodepj20240909'  # Could change
+APP_SERVICE_NAME='portfolio-flask-esra-001'  # Could change
 
 az webapp create\
     --name $APP_SERVICE_NAME \
