@@ -1,5 +1,7 @@
 import csv
 from flask import Flask, render_template, url_for, request, redirect
+from utils.database import get_data 
+
 app = Flask(__name__)
 
 
@@ -7,6 +9,15 @@ app = Flask(__name__)
 def homepage():
     return render_template('index.html')
 
+@app.route('/about.html')
+def about():
+    try:
+        df = get_data() 
+        ratings = df.to_dict(orient="records")
+        print(ratings)
+        return render_template('about.html', ratings=ratings)
+    except Exception as e:
+        return f"Database fout: {str(e)}"
 
 @app.route('/<string:page_name>')
 def html_page(page_name):
