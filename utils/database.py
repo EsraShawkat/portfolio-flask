@@ -19,8 +19,6 @@ connection = mysql.connector.connect(host= host,
                                          user= user,
                                          password= password)
 
-# db_Info = connection.get_server_info()
-# print("Connected to MySQL Server version ", db_Info)
 
 engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}/{database}")
 
@@ -30,10 +28,6 @@ def get_data():
         print(df)
         return df
     
-# df = pd.read_sql(text("SELECT * FROM esra_ratings"), con=engine.connect())
-
-# df.head()
-
 
 
 
