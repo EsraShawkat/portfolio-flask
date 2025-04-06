@@ -1,9 +1,53 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  IMAGE_NAME: portfolio-flask
+  AWS_REGION: eu-west-1
+  DOCKER_IMAGE: $CI_REGISTRY_IMAGE:latest
+  TF_VAR_docker_image: $DOCKER_IMAGE
+
+
+build-job:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "Inloggen bij GitLab container registry"
+    - echo "$CI_REGISTRY_USER:$CI_REGISTRY_PASSWORD"
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker build -t $IMAGE_NAME .
+    - docker tag $IMAGE_NAME $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+
 deploy-job:
+  stage: deploy
+  image: hashicorp/terraform:latest
   tags:
     - hva
-  image: mcr.microsoft.com/azure-cli
-  stage: deploy
+
+  before_script:
+    - apk add --no-cache curl unzip
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    - unzip awscliv2.zip
+    - ./aws/install
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set region $AWS_REGION
+  variables:
+    TF_VAR_gitlab_server: $CI_REGISTRY
+    TF_VAR_gitlab_user: $CI_REGISTRY_USER
+    TF_VAR_gitlab_token: $CI_JOB_TOKEN
+    TF_VAR_db_connection_string: $DB_CONNECTION_STRING
+    TF_VAR_docker_image: $DOCKER_IMAGE
+    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+    AWS_REGION: $AWS_REGION
   script:
-    - az login
-    - az account set --subscription "cbe5f292-444e-4620-80e0-9a5fd90ed41d" 
-    - az group list
+    - cd terraform
+    - terraform init
+    - terraform validate
+    - terraform plan -out=tfplan
+    - terraform apply -auto-approve tfplan

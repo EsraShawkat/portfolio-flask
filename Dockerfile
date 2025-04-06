@@ -1,22 +1,14 @@
-# Gebruik een officiële Python-image als basis
-FROM python:3.9
+FROM python:3.11-slim
 
-# Stel de werkdirectory in de container in
 WORKDIR /app
 
-# Kopieer de projectbestanden naar de container
-COPY . /app
+COPY requirements.txt .
 
-# Installeer afhankelijkheden
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install -r requirements.txt
 
-# Stel de environment variabelen in voor Flask
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_ENV=development
+# works only when the docker file is in the app folder...
+COPY . . 
 
-# Open de poort die Flask gebruikt
-EXPOSE 5000
+EXPOSE 50505
 
-# Start de Flask-app
-CMD ["flask", "run"]
+ENTRYPOINT ["gunicorn", "app:app"]

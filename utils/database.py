@@ -1,38 +1,27 @@
-# https://dev.mysql.com/doc/connector-python/en/connector-python-installation.html
-
-# https://auth0.com/blog/sqlalchemy-orm-tutorial-for-python-developers/
-
-# https://oege.ie.hva.nl/phpmyadmin/index.php
-
-# mysqlconnector
+import os
 import pandas as pd
 from sqlalchemy import create_engine, text
-import mysql.connector
+from dotenv import load_dotenv
 
-host='oege.ie.hva.nl'
-database='zshawkae'
-user='shawkae'
-password='LTcsX2bOK2JwcN2/'
+# Laad variabelen uit .env of CI/CD environment
+load_dotenv()
 
-connection = mysql.connector.connect(host= host,
-                                         database= database,
-                                         user= user,
-                                         password= password)
+# Haal connectiestring uit environment variable
+DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
+# Controleer of hij bestaat
+if not DB_CONNECTION_STRING:
+    raise Exception("FOUT: DB_CONNECTION_STRING is niet gezet!")
 
-engine = create_engine(f"mysql+mysqlconnector://{user}:{password}@{host}/{database}")
+# Print voor debug (optioneel, haal weg voor productie)
+print(f"Connectiestring: {DB_CONNECTION_STRING}")
 
+# Maak database engine aan
+engine = create_engine(DB_CONNECTION_STRING)
+
+# Functie om data op te halen
 def get_data():
     with engine.connect() as connection:
         df = pd.read_sql(text("SELECT Naam, Rating FROM esra_ratings"), con=connection)
         print(df)
         return df
-    
-
-
-
-
-
-
-
-

@@ -12,14 +12,14 @@ az group list --query [].name --output table
 
 # Long way home
 LOCATION='westeurope'
-RESOURCE_GROUP_NAME='esra.shawkat_rg_7810'  # Could change
+RESOURCE_GROUP_NAME='myResourceGroup'  # Could change
 
 # Create a resource group
 az group create \
     --location $LOCATION \
     --name $RESOURCE_GROUP_NAME
 
-APP_SERVICE_PLAN_NAME='esra.shawkat_asp_4613'    
+APP_SERVICE_PLAN_NAME='esra.shawkat-asp'    
 
 az appservice plan create \
     --name $APP_SERVICE_PLAN_NAME \
@@ -27,7 +27,7 @@ az appservice plan create \
     --is-linux
 
 # Change 123 to any three characters to form a unique name across Azure
-APP_SERVICE_NAME='salmon-sky-611700db7dd4475aac2c11cd4d30fedd'  # Could change
+APP_SERVICE_NAME='portfolio-flask-app'  # Could change
 
 az webapp create\
     --name $APP_SERVICE_NAME \

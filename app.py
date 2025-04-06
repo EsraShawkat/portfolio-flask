@@ -1,8 +1,16 @@
+import os
 import csv
-from flask import Flask, render_template, url_for, request, redirect
-from utils.database import get_data 
+from flask import Flask, render_template, request, redirect
+from utils.database import get_data
+from dotenv import load_dotenv
 
 app = Flask(__name__)
+
+# Laad variabelen uit .env bestand
+load_dotenv()
+
+# Debug: print de connectiestring uit om te checken of hij goed geladen is
+# print(f"DB connectiestring uit .env: {os.getenv('DB_CONNECTION_STRING')}")
 
 
 @app.route('/')
